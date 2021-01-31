@@ -9,7 +9,7 @@ import UIKit
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController, ARSCNViewDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
     
@@ -18,6 +18,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Set the view's delegate
         sceneView.delegate = self
+        sceneView.session.delegate = self
         
         // Show statistics such as fps and timing information
         sceneView.showsStatistics = true
@@ -27,7 +28,105 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Set the scene to the view
         sceneView.scene = scene
+        
+        drawEarth()
     }
+    
+    func drawEarth() {
+        guard let diffuse = UIImage(named: "art.scnassets/earth_diffuse_4k.jpg"),
+              let specular = UIImage(named: "art.scnassets/earth_specular_1k.jpg"),
+              let lights = UIImage(named: "art.scnassets/earth_lights_4k.jpg"),
+              let normal = UIImage(named: "art.scnassets/earth_normal_4k.jpg"),
+              let nubes = UIImage(named: "art.scnassets/clouds_transparent_2K.jpg") else {
+            return
+        }
+        
+        let earth = SCNSphere(radius: 0.3)
+        let earthNode = SCNNode(geometry: earth)
+        earthNode.name = "earth"
+        
+        let earthMaterial = SCNMaterial()
+        earthMaterial.diffuse.contents = diffuse
+        earthMaterial.specular.contents = specular
+        earthMaterial.normal.contents = normal
+        earthMaterial.emission.contents = lights
+        earthMaterial.multiply.contents = UIColor(white: 0.7, alpha: 1.0)
+        earthMaterial.shininess = 0.5
+        
+        earth.firstMaterial = earthMaterial
+        
+        let clouds = SCNSphere(radius: 0.3075)
+        clouds.segmentCount = 144
+        
+        let cloudsMaterial = SCNMaterial()
+        cloudsMaterial.diffuse.contents = UIColor.white
+        cloudsMaterial.locksAmbientWithDiffuse = true
+        cloudsMaterial.transparent.contents = nubes
+        cloudsMaterial.transparencyMode = .rgbZero
+        cloudsMaterial.writesToDepthBuffer = false
+        
+        if let shaderURL = Bundle.main.url(forResource: "AtmosphereHalo", withExtension: "glsl"),
+           let content = try? Data(contentsOf: shaderURL), let string = String(data: content, encoding: .utf8) {
+            cloudsMaterial.shaderModifiers = [.fragment: string]
+        }
+        
+        
+        clouds.firstMaterial = cloudsMaterial
+        
+        let cloudNode = SCNNode(geometry: clouds)
+        cloudNode.name = "nubes"
+        earthNode.addChildNode(cloudNode)
+        
+        let rotate = CABasicAnimation(keyPath: "rotation.w")
+        rotate.byValue = Double.pi * 2.0
+        rotate.duration = 50
+        rotate.timingFunction = CAMediaTimingFunction(name: .linear)
+        rotate.repeatCount = .infinity
+        earthNode.addAnimation(rotate, forKey: "Rotar")
+
+        let cloudRotate = CABasicAnimation(keyPath: "rotation.w")
+        cloudRotate.byValue = -Double.pi * 2.0
+        cloudRotate.duration = 150
+        cloudRotate.timingFunction = CAMediaTimingFunction(name: .linear)
+        cloudRotate.repeatCount = .infinity
+        cloudNode.addAnimation(cloudRotate, forKey: "Rotar nubes")
+        
+        let axisNode = SCNNode()
+        sceneView.scene.rootNode.addChildNode(axisNode)
+        axisNode.addChildNode(earthNode)
+        axisNode.rotation = SCNVector4(1, 0, 0, Double.pi/6.0)
+        
+        earthNode.position = SCNVector3(0, -0.5, -1)
+        
+        let sun = SCNLight()
+        sun.type = .spot
+        sun.castsShadow = true
+        sun.shadowRadius = 0.3
+        sun.shadowColor = UIColor(white: 0.0, alpha: 0.75)
+        sun.zNear = 1.0
+        sun.zFar = 4.0
+        
+        let sunNode = SCNNode()
+        sunNode.light = sun
+        sunNode.name = "sol"
+        sunNode.position = SCNVector3(-15, 0, 12)
+        sunNode.constraints = [SCNLookAtConstraint(target: earthNode)]
+        sceneView.scene.rootNode.addChildNode(sunNode)
+    }
+    
+    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        guard let sol = sceneView.scene.rootNode.childNode(withName: "sol", recursively: false),
+              let intensidad = session.currentFrame?.lightEstimate?.ambientIntensity,
+              let temperatura = session.currentFrame?.lightEstimate?.ambientColorTemperature,
+              let luz = sol.light else {
+            return
+        }
+        if luz.intensity != intensidad {
+            sol.light?.intensity = intensidad
+            sol.light?.temperature = temperatura
+        }
+    }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
