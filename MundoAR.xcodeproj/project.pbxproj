@@ -13,6 +13,7 @@
 		4B6E5A9125C6F8690004330C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B6E5A8F25C6F8690004330C /* Main.storyboard */; };
 		4B6E5A9325C6F86A0004330C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B6E5A9225C6F86A0004330C /* Assets.xcassets */; };
 		4B6E5A9625C6F86A0004330C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B6E5A9425C6F86A0004330C /* LaunchScreen.storyboard */; };
+		4B6E5AA025C6F8AB0004330C /* AtmosphereHalo.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 4B6E5A9F25C6F8AB0004330C /* AtmosphereHalo.glsl */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		4B6E5A9225C6F86A0004330C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4B6E5A9525C6F86A0004330C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4B6E5A9725C6F86A0004330C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4B6E5A9F25C6F8AB0004330C /* AtmosphereHalo.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AtmosphereHalo.glsl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 				4B6E5A8D25C6F8690004330C /* ViewController.swift */,
 				4B6E5A8F25C6F8690004330C /* Main.storyboard */,
 				4B6E5A9225C6F86A0004330C /* Assets.xcassets */,
+				4B6E5A9F25C6F8AB0004330C /* AtmosphereHalo.glsl */,
 				4B6E5A9425C6F86A0004330C /* LaunchScreen.storyboard */,
 				4B6E5A9725C6F86A0004330C /* Info.plist */,
 			);
@@ -127,6 +130,7 @@
 				4B6E5A8C25C6F8690004330C /* art.scnassets in Resources */,
 				4B6E5A9625C6F86A0004330C /* LaunchScreen.storyboard in Resources */,
 				4B6E5A9325C6F86A0004330C /* Assets.xcassets in Resources */,
+				4B6E5AA025C6F8AB0004330C /* AtmosphereHalo.glsl in Resources */,
 				4B6E5A9125C6F8690004330C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -289,6 +293,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 576T2M2BDH;
 				INFOPLIST_FILE = MundoAR/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -308,6 +313,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 576T2M2BDH;
 				INFOPLIST_FILE = MundoAR/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
