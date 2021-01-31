@@ -70,33 +70,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
             cloudsMaterial.shaderModifiers = [.fragment: string]
         }
         
-        
         clouds.firstMaterial = cloudsMaterial
         
         let cloudNode = SCNNode(geometry: clouds)
         cloudNode.name = "nubes"
         earthNode.addChildNode(cloudNode)
-        
-        let rotate = CABasicAnimation(keyPath: "rotation.w")
-        rotate.byValue = Double.pi * 2.0
-        rotate.duration = 50
-        rotate.timingFunction = CAMediaTimingFunction(name: .linear)
-        rotate.repeatCount = .infinity
-        earthNode.addAnimation(rotate, forKey: "Rotar")
 
-        let cloudRotate = CABasicAnimation(keyPath: "rotation.w")
-        cloudRotate.byValue = -Double.pi * 2.0
-        cloudRotate.duration = 150
-        cloudRotate.timingFunction = CAMediaTimingFunction(name: .linear)
-        cloudRotate.repeatCount = .infinity
-        cloudNode.addAnimation(cloudRotate, forKey: "Rotar nubes")
-        
         let axisNode = SCNNode()
         sceneView.scene.rootNode.addChildNode(axisNode)
         axisNode.addChildNode(earthNode)
         axisNode.rotation = SCNVector4(1, 0, 0, Double.pi/6.0)
         
         earthNode.position = SCNVector3(0, -0.5, -1)
+        
+        earthNode.rotation = SCNVector4(0, 1, 0, 0)
+        cloudNode.rotation = SCNVector4(0, 1, 0, 0)
         
         let sun = SCNLight()
         sun.type = .spot
@@ -112,6 +100,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
         sunNode.position = SCNVector3(-15, 0, 12)
         sunNode.constraints = [SCNLookAtConstraint(target: earthNode)]
         sceneView.scene.rootNode.addChildNode(sunNode)
+        
+        let earthRotate = CABasicAnimation(keyPath: "rotation.w")
+        earthRotate.byValue = CGFloat.pi * 2.0
+        earthRotate.duration = 50
+        earthRotate.timingFunction = CAMediaTimingFunction(name: .linear)
+        earthRotate.repeatCount = .infinity
+        earthNode.addAnimation(earthRotate, forKey: "Rotar tierra")
+
+        let cloudRotate = CABasicAnimation(keyPath: "rotation.w")
+        cloudRotate.byValue = -CGFloat.pi * 2.0
+        cloudRotate.duration = 150
+        cloudRotate.timingFunction = CAMediaTimingFunction(name: .linear)
+        cloudRotate.repeatCount = .infinity
+        cloudNode.addAnimation(cloudRotate, forKey: "Rotar nubes")
     }
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
